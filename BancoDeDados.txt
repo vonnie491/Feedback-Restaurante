@@ -1,0 +1,21 @@
+CREATE TABLE usuario(
+    nome varchar(14) PRIMARY KEY NOT NULL,
+    senha varchar(12) NOT NULL,
+    tipo int CHECK (tipo IN (0, 1, 2))
+)
+CREATE TABLE pratos{
+    nome pk
+    preço
+    descrição
+}
+CREATE TABLE imagem(
+    nome(prato) fk
+    caminho
+)
+CREATE TABLE avaliacoes{
+    nome(cliente) fk
+    nome(prato) fk
+    nota(1-5)
+    comentario
+    data
+}

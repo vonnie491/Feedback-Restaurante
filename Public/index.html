@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="Caixa">
+        <h1>Bem Vindo</h1>
+        <input class="Dado" id="Nome" placeholder="Nome">
+        <input type="password" class="Dado" id="Senha" placeholder="Senha">
+        <div id="CheckSenha">
+            <input type="checkbox" id="Check" onclick="EsconderSenha()">
+            <p>Mostrar Senha</p>
+        </div>
+        <button id="Login">Login</button>
+        <button id="Registrar">Registrar</button>
+    </div>
+</body>
+<script>
+    function EsconderSenha(){
+        var x = document.getElementById("Senha")
+        if (x.type === "password"){
+            x.type = "text";
+        }else{
+            x.type = "password";
+        }
+    }
+
+    document.getElementById("Registrar").addEventListener("click", async function(event){
+        event.preventDefault();
+
+        const nome = document.getElementById("Nome").value;
+        const senha = document.getElementById("Senha").value;
+
+        const response = await fetch("http://localhost:80/registrar",{
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({nome, senha})
+        });
+
+        const result = await response.json();
+        
+        if(response.ok){
+            alert(result.message);
+        }
+        else{
+            alert(result.error);
+        }
+    })
+    
+    document.getElementById("Login").addEventListener("click", async function(event){
+        event.preventDefault();
+
+        const nome = document.getElementById("Nome").value;
+        const senha = document.getElementById("Senha").value;
+
+        const response = await fetch("http://localhost:80/login",{
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({nome, senha})
+        });
+        const result = await response.json();
+
+        if(response.ok){
+            alert(result.message);
+            window.location.href = "inicial.html";
+        }
+        else{
+            alert(result.error);
+        }
+    })
+</script>
+</html>
