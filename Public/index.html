@@ -66,10 +66,15 @@
         const result = await response.json();
 
         if(response.ok){
+            if(nome == "admin" & senha == "0000"){
             alert(result.message);
-            window.location.href = "inicial.html";
-        }
-        else{
+            window.location.href = "admin.html";
+            }else{
+                alert(result.message);
+                window.location.href = "inicial.html";
+            }
+            
+        }else{
             alert(result.error);
         }
     })

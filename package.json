@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "pg": "^8.13.3"
-  }
-}

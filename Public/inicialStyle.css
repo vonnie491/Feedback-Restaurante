@@ -1,0 +1,15 @@
+body{
+    font-family: 'Open Sans';
+    margin: 0;
+    background-color:#e3ffff;
+}
+#topo{
+    background: linear-gradient(to bottom, #239beb 80%, #1b63c2 100%) ;
+    width: 100%;
+    height: 40px;
+    border: 5px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-weight: bold;
+}

@@ -3,6 +3,8 @@ CREATE TABLE usuario(
     senha varchar(12) NOT NULL,
     tipo int CHECK (tipo IN (0, 1, 2))
 )
+INSERT INTO usuario (nome, senha, tipo) VALUES ("admin", "0000", "2")
+)
 CREATE TABLE pratos{
     nome pk
     preço
