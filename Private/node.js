@@ -9,6 +9,7 @@ app.use(cors());
 app.use(bodyParser.json())
 app.use(express.json());
 
+//Conectar com o bando de dados
 const pool = new Pool({
     user: "postgres",
     host: "localhost",
@@ -17,6 +18,7 @@ const pool = new Pool({
     port: 5432,
 });
 
+//Registrar
 app.post("/registrar", async (req, res) => {
     try{
         const {nome, senha} = req.body;
@@ -38,6 +40,8 @@ app.post("/registrar", async (req, res) => {
         res.status(500).json({error: "Erro ao registrar"});
     }
 });
+
+//Login
 app.post("/login", async (req, res) => {
     try{
         const {nome, senha} = req.body;
@@ -58,6 +62,21 @@ app.post("/login", async (req, res) => {
     catch(error){
         console.error(error);
         res.status(500).json({error: "Erro ao fazer login"})
+    }
+});
+
+app.get("/usuarios", async (req, res) => {
+    try {
+        res.set('Cache-Control', 'no-store');
+
+        console.log('Rota /usuarios foi chamada');
+        const result = await pool.query("SELECT nome, senha FROM usuario WHERE tipo = 0");
+        console.log(result.rows);
+        res.json(result.rows)
+    }
+    catch (error){
+        console.error(err);
+        res.status(500).json({error: "Erro na busca de usuários"})
     }
 });
 
