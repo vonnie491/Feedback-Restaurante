@@ -18,8 +18,8 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width:30%;
-    height:70%;
+    width:450px;
+    height:500px;
     border-radius: 10%;
     background-color: white;
     border-width: 1px;

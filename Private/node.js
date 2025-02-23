@@ -65,6 +65,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
+//Exibir usuários na página Admin
 app.get("/usuarios", async (req, res) => {
     try {
         res.set('Cache-Control', 'no-store');

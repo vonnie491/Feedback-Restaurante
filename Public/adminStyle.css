@@ -4,4 +4,23 @@ body{
     background-color:black;
     color: #298021;
     font-size: 18px;
+    animation: mudaCor 2s infinite alternate;
+}
+@keyframes mudaCor{
+    0% {color: #6bdb60}
+    25% {color: #44a13b}
+    50% {color: #298021}
+    100% {color: #164d11}
+}
+#divUsuarios {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #298021;
+}
+.usuario {
+    border: 1px solid #298021;
+    padding: 10px;
+    margin: 10px;
+    height: auto;
+    border-radius: 5px;
 }
