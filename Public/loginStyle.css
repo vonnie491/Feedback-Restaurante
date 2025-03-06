@@ -1,0 +1,59 @@
+body{
+    font-family: 'Open Sans';
+    margin:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(45deg, #239beb, #57baba, #9cf7ff);
+    background-size: 400% 400%;
+    animation: animaçãodefundo 8s infinite alternate ease-in-out;
+}
+@keyframes animaçãodefundo{
+    0%{background-position: 0% 50%;}
+    100%{background-position: 100% 50%;}
+}
+#Caixa{ 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:450px;
+    height:500px;
+    border-radius: 10%;
+    background-color: white;
+    border-width: 1px;
+    border-style: solid gray;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
+}
+.Dado{
+    font-family: 'Open Sans';
+    width: 60%;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    padding: 5px;
+    padding-left: 10px;
+}
+#Senha{
+    margin-bottom: 0px;
+}
+#CheckSenha{
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    margin-left: -35%;
+}
+button{
+    width: 150px;
+    color:#ffffff;
+    font-family: 'Open Sans';
+    margin-top: 25px;
+    margin-bottom: -20px;
+    border-radius: 10px;
+    background-color: #239beb;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+button:hover{
+    background-color: #52cccc;
+}

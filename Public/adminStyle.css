@@ -1,4 +1,4 @@
-body{
+body, div, input, button, ::-webkit-scrollbar{
     font-family: 'Open Sans';
     margin: 0;
     background-color:black;
@@ -7,20 +7,43 @@ body{
     animation: mudaCor 2s infinite alternate;
 }
 @keyframes mudaCor{
-    0% {color: #6bdb60}
-    25% {color: #44a13b}
-    50% {color: #298021}
-    100% {color: #164d11}
+    0% {color: #6bdb60; border-color: #6bdb60}
+    25% {color: #44a13b; border-color: #44a13b}
+    50% {color: #298021; border-color: #298021}
+    100% {color: #164d11; border-color: #164d11}
 }
 #divUsuarios {
     margin-top: 20px;
     padding: 10px;
     border: 1px solid #298021;
 }
-.usuario {
+.usuario{
+    display: flex;
+    flex-direction: column;
     border: 1px solid #298021;
+    background-color: black;
     padding: 10px;
     margin: 10px;
     height: auto;
     border-radius: 5px;
+}
+input {
+    border: none;
+    outline: none;
+    background: none;
+    text-decoration: none;
+}
+button{
+    border: 1px solid #298021;
+    background-color: black;
+    width: 200px;
+    margin-top: 5px;
+    height: auto;
+    border-radius: 5px;
+}
+button:hover{
+    background-color: #1a171a;
+}
+::-webkit-scrollbar {
+    width: 0px;
 }

@@ -1,23 +1,32 @@
 CREATE TABLE usuario(
-    nome varchar(14) PRIMARY KEY NOT NULL,
-    senha varchar(12) NOT NULL,
-    tipo int CHECK (tipo IN (0, 1, 2))
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(14) UNIQUE NOT NULL,
+    senha VARCHAR(12) NOT NULL,
+    tipo INT CHECK (tipo IN (0, 1, 2))
 )
-INSERT INTO usuario (nome, senha, tipo) VALUES ("admin", "0000", "2")
+INSERT INTO usuario (nome, senha, tipo) VALUES ('admin', '0000', '2')
+INSERT INTO usuario (nome, senha, tipo) VALUES ('gerente', '1111', '1')
 )
-CREATE TABLE pratos{
-    nome pk
-    preço
-    descrição
-}
-CREATE TABLE imagem(
-    nome(prato) fk
-    caminho
-)
-CREATE TABLE avaliacoes{
-    nome(cliente) fk
-    nome(prato) fk
-    nota(1-5)
-    comentario
-    data
-}
+CREATE TABLE pratos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(30) UNIQUE NOT NULL,
+    preco NUMERIC(5,2) NOT NULL,
+    descricao VARCHAR(255)
+);
+
+CREATE TABLE imagens (
+    id SERIAL PRIMARY KEY,
+    prato_id INT UNIQUE NOT NULL,
+    caminho TEXT NOT NULL,
+    FOREIGN KEY (prato_id) REFERENCES pratos(id) ON DELETE CASCADE
+);
+
+CREATE TABLE avaliacoes (
+    id SERIAL PRIMARY KEY,
+    nome_cliente VARCHAR(14) NOT NULL,
+    prato_nome VARCHAR(30) NOT NULL,
+    nota INT CHECK (nota >= 1 AND nota <= 5),
+    comentario TEXT,
+    CONSTRAINT fk_cliente FOREIGN KEY (nome_cliente) REFERENCES clientes(nome),
+    CONSTRAINT fk_prato FOREIGN KEY (prato_nome) REFERENCES pratos(nome)
+);

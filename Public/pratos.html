@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar pratos</title>
+    <link rel="stylesheet" href="pratosStyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="Topo">Gerenciar pratos</div>
+    <div id="CriarUsuário">
+        <p>Criar prato</p>
+        <hr>
+        <div id="CriarNome">
+            <p>Nome: </p>
+            <input type="text" id="nomeInput" placeholder="Nome">
+        </div>
+        <hr>
+        <div id="CriarPreço">
+            <p>Preço: </p>
+            <input type="number" id="precoInput" placeholder="Preço" step="0.50" min="0" max="999,9">
+        </div>
+        <hr>
+        <div id="CriarDesc">
+            <p>Descrição: </p>
+            <input type="text" id="descricaoInput" placeholder="Descrição">
+        </div>
+        <hr>
+        <div id="CriarImagem">
+            <p>Imagem: </p>
+            <input type="file" id="imagemInput" accept="image/*" hidden>
+            <label for="imagemInput" id="botãoImagem">Selecionar Imagem</label>
+            <span id="nomeArquivo">Nenhum arquivo selecionado</span>
+        </div>
+        <hr>
+        <button onclick="criarPrato()">Criar Prato</button>
+        <hr>
+    </div>
+    <div id="ListaPratos">
+        <p>Pratos: </p>
+        <div id="PratosContainer"></div>
+    </div>
+</body>
+<script>
+    document.getElementById("imagemInput").addEventListener("change", function() {
+        const fileName = this.files[0] ? this.files[0].name : "Nenhum arquivo selecionado";
+        document.getElementById("nomeArquivo").textContent = fileName;
+    });
+
+    async function criarPrato() {
+        const nome = document.querySelector("#CriarNome input").value;
+        const preco = document.querySelector("#CriarPreço input").value;
+        const descricao = document.querySelector("#CriarDesc input").value;
+        const imagemInput = document.querySelector("#imagemInput").files[0];
+
+        if (!nome || !preco || !descricao || !imagemInput) {
+            alert("Preencha todos os campos!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("nome", nome);
+        formData.append("preco", preco);
+        formData.append("descricao", descricao);
+        formData.append("imagem", imagemInput);
+
+        try {
+            const response = await fetch("http://localhost:80/pratos", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert("Prato criado com sucesso!");
+            }
+            else {
+                console.error("Erro ao criar prato:", await response.json());
+            }
+        }
+        catch (err) {
+            console.error("Erro ao criar prato:", err);
+        }
+    }
+
+    async function buscarPratos() {
+        try {
+            const response = await fetch("http://localhost:80/pratos");
+            console.log('Status da resposta:', response.status);
+
+            if (response.ok) {
+                const pratos = await response.json();
+                console.log('Pratos recebidos:', pratos);
+                exibirPratos(pratos);
+            } else {
+                console.error("Erro ao buscar pratos");
+            }
+        } catch (err) {
+            console.error("Erro ao buscar pratos:", err);
+        }
+    }
+
+    function exibirPratos(pratos) {
+        const pratosContainer = document.getElementById("PratosContainer");
+        pratosContainer.innerHTML = "";
+
+        pratos.forEach(prato => {
+            const pratoDiv = document.createElement("div");
+            pratoDiv.classList.add("prato");
+
+            pratoDiv.innerHTML = `
+                <img src="uploads/${prato.imagem.caminho}" alt="${prato.nome}" width="200">
+                <p>Nome: </p>
+                <input id="nome-${prato.id}" value="${prato.nome}"></input>
+                <p>Preço (R$): </p>
+                <input id="preco-${prato.id}" value="${prato.preco}"></input>
+                <p>Descrição: </p>
+                <input id="descricao-${prato.id}" value="${prato.descricao}"></input>
+                <button onclick="deletarPrato(${prato.id})">Deletar</button>
+                <button onclick="atualizarPrato(${prato.id})">Atualizar</button>
+            `;
+            pratosContainer.appendChild(pratoDiv);
+        });
+    }
+
+    async function deletarPrato(id) {
+        try {
+            const response = await fetch(`http://localhost:80/pratos/${id}`, {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                alert("Prato deletado com sucesso!");
+                buscarPratos();
+            } else {
+                console.error("Erro ao deletar prato:", await response.json());
+            }
+        } catch (err) {
+            console.error("Erro ao deletar prato:", err);
+        }
+    }
+    
+    async function atualizarPrato(id) {
+        const nome = document.getElementById(`nome-${id}`).value;
+        const preco = parseFloat(document.getElementById(`preco-${id}`).value);
+        const descricao = document.getElementById(`descricao-${id}`).value;
+
+        if (!nome || isNaN(preco) || !descricao) {
+            alert("Preencha todos os campos corretamente.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:80/pratos/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome, preco, descricao })
+            });
+
+            if (response.ok) {
+                alert("Prato atualizado com sucesso!");
+                buscarPratos();
+            } else {
+                console.error("Erro ao atualizar prato:", await response.json());
+            }
+        } catch (err) {
+            console.error("Erro ao atualizar prato:", err);
+        }
+    }
+
+window.onload = buscarPratos;
+
+</script>
+</html>

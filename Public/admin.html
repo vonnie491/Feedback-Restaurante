@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Gerenciar usuários</title>
     <link rel="stylesheet" href="adminStyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
     <p>Gerenciar usuários</p>
-    <div id="divUsuarios">
-        <p>Nome: </p>
-        <p>Senha: </p>
-    </div>
+    <div id="divUsuarios"></div>
 </body>
 <script>
     async function carregarUsuarios(){
@@ -32,16 +29,41 @@
                     const div = document.createElement("div");
                     div.classList.add("usuario");
                     
-                    const nome = document.createElement("p");
-                    nome.textContent = `Nome: ${usuario.nome}`;
+                    const id = document.createElement("input");
+                    id.type = "hidden";
+                    id.name = "id";
+                    id.value = usuario.id;
 
-                    const senha = document.createElement("p");
-                    senha.textContent = `Senha: ${usuario.senha}`;
+                    const nome = document.createElement("input");
+                    nome.type = "text";
+                    nome.value = usuario.nome;
+                    nome.setAttribute("data-nome-original", usuario.nome);
 
+                    const senha = document.createElement("input");
+                    senha.type = "text";
+                    senha.value = usuario.senha;
+
+                    const deletar = document.createElement("button");
+                    deletar.textContent = "Deletar usuário";
+
+                    const salvar = document.createElement("button");
+                    salvar.textContent = "Salvar alterações";
+
+                    div.appendChild(id);
                     div.appendChild(nome);
                     div.appendChild(senha);
+                    div.appendChild(deletar);
+                    div.appendChild(salvar);
                     container.appendChild(div);
-            });
+
+                    deletar.addEventListener("click", async () => {
+                        await deleteUsuario(id.value);
+                    });
+
+                    salvar.addEventListener("click", async () => {
+                        await salvarUsuario(id.value, nome.value, senha.value);
+                    });
+                });
             } 
         }
         catch (err) {
@@ -49,5 +71,49 @@
         }
     }
     window.onload = carregarUsuarios;
+    
+    async function deleteUsuario(id) {
+        try {
+            const response = await fetch(`http://localhost:80/usuarios/${id}`, {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                alert("Usuário deletado com sucesso!");
+                carregarUsuarios();
+            } else {
+                console.error("Erro ao deletar usuário:", await response.json());
+            }
+        } catch (err) {
+            console.error("Erro ao deletar usuário:", err);
+        }
+    }
+
+    async function salvarUsuario(id, nome, senha) {
+        if (nome.length > 14) {
+            alert("O nome deve ter no máximo 14 caracteres.");
+            return;
+        }
+        if (senha.length > 12) {
+            alert("A senha deve ter no máximo 12 caracteres.");
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:80/usuarios/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, nome, senha })
+            });
+
+            if (response.ok) {
+                alert("Usuário atualizado!");
+                carregarUsuarios();
+            } else {
+                console.error("Erro ao atualizar usuário:", await response.json());
+            }
+        } catch (err) {
+            console.error("Erro ao salvar alterações:", err);
+        }
+    }
 </script>
 </html>

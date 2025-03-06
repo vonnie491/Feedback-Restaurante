@@ -2,14 +2,113 @@ body{
     font-family: 'Open Sans';
     margin: 0;
     background-color:#e3ffff;
+    font-weight: bold;
+    overflow-x: hidden;
 }
 #topo{
     background: linear-gradient(to bottom, #239beb 80%, #1b63c2 100%) ;
     width: 100%;
     height: 40px;
-    border: 5px;
     display: flex;
     align-items: center;
     padding-left: 10px;
     font-weight: bold;
+}
+#ListaPratos {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+#PratosContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    margin-left: -15px;
+    border-radius: 10px;
+    width: 98.5%;
+    align-items: stretch;
+}
+.prato-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+}
+.prato {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.prato img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+textarea {
+    width: 100%;
+    resize: none;
+    height: 70px;
+    border-radius: 5px;
+}
+button {
+    font-family: 'Open Sans';
+    background-color: #239beb;
+    color:#ffffff;;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #52cccc;
+}
+.avaliacoes {
+    display: flex;
+    width: 800px;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.lista-avaliacoes {
+    max-height: auto;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+}
+.avaliacao{
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+}
+.avaliacao strong {
+    font-size: 16px;
+    color: #333;
+}
+.avaliacao p {
+    font-size: 14px;
+    color: #555;
+    margin-top: 0;
+}
+.avaliacao .nota {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff9900;
 }

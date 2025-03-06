@@ -1,0 +1,93 @@
+body{
+    font-family: 'Open Sans';
+    margin: 0;
+}
+#Topo{
+    background: linear-gradient(to bottom, #239beb 80%, #1b63c2 100%) ;
+    font-weight: bold;
+    border: 5px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom: 0px;
+}
+p{
+    font-weight: bold;
+}
+#CriarUsuário{
+    background-color: #e3ffff;
+    padding-top: 1px;
+    padding-left: 10px;
+    height: 10%;
+}
+#CriarNome, #CriarPreço, #CriarDesc, #CriarImagem{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+input{
+    height: 10%;
+    border-radius: 20px;
+    margin-left: 10px;
+    padding-left: 8px;
+}
+#botãoImagem{
+    padding: 6px 10px;
+    background-color: #239beb;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+#botãoImagem:hover, button:hover {
+    background-color: #52cccc;
+}
+#nomeArquivo {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #555;
+}
+button{
+    padding: 6px 10px;
+    background-color: #239beb;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+#ListaPratos {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+#PratosContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+.prato {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+.prato img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+.prato input{
+    margin-left: 0;
+    margin-top: 0;
+    height: auto;
+}
+.prato button{
+    margin-top: 10px;
+}

@@ -3,14 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Página inicial</title>
     <link rel="stylesheet" href="inicialStyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="topo">Placeholder.</div>
-    <div id="corpo">
-        <p>Pratos</p>
+    <div id="topo">Restaurante Ponto Azul</div>
+    <div id="ListaPratos">
+        <p>Pratos: </p>
+        <div id="PratosContainer"></div>
     </div>
 </body>
+<script>
+    async function buscarPratos() {
+        try {
+            const response = await fetch("http://localhost:80/pratos");
+            console.log('Status da resposta:', response.status);
+
+            if (response.ok) {
+                const pratos = await response.json();
+                console.log('Pratos recebidos:', pratos);
+                exibirPratos(pratos);
+            } else {
+                console.error("Erro ao buscar pratos");
+            }
+        } catch (err) {
+            console.error("Erro ao buscar pratos:", err);
+        }
+    }
+
+    async function buscarAvaliacoes(pratoNome) {
+        try {
+            const response = await fetch(`http://localhost:80/avaliacoes?prato=${pratoNome}`);
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.error("Erro ao buscar avaliações");
+                return [];
+            }
+        } catch (err) {
+            console.error("Erro ao buscar avaliações:", err);
+            return [];
+        }
+    }
+
+    async function enviarAvaliacao(pratoNome) {
+        const nomeCliente = localStorage.getItem('nome_cliente');
+        
+        if (!nomeCliente) {
+            alert("Por favor, faça o login primeiro.");
+            return;
+        }
+
+        const comentarioElement = document.getElementById(`comentario-${pratoNome}`);
+        const comentario = comentarioElement.value.trim(); 
+
+        const notaElement = document.querySelector(`input[name="nota-${pratoNome}"]:checked`);
+        const nota = notaElement ? parseInt(notaElement.value) : null;
+
+        if (!comentario || !nota) {
+            alert("A avaliação e a nota não podem ser vazias");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:80/avaliacoes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prato_nome: pratoNome,
+                    nome_cliente: nomeCliente,
+                    nota: nota,
+                    comentario: comentario
+                })
+            });
+
+            if (response.ok) {
+                alert("Avaliação enviada!");
+                comentarioElement.value = "";
+                document.querySelectorAll(`input[name="nota-${pratoNome}"]`).forEach(input => input.checked = false);
+                buscarPratos();
+            } else {
+                console.error("Erro ao enviar avaliação");
+                alert("Erro ao enviar avaliação");
+            }
+        }
+        catch (err) {
+            console.error("Erro ao enviar avaliação:", err);
+            alert("Erro ao enviar avaliação");
+        }
+    }
+
+    async function exibirPratos(pratos) {
+        const pratosContainer = document.getElementById("PratosContainer");
+        pratosContainer.innerHTML = "";
+
+        for (const prato of pratos) {
+            const pratoContainer = document.createElement("div");
+            pratoContainer.classList.add("prato-container");
+
+            const pratoDiv = document.createElement("div");
+            pratoDiv.classList.add("prato");
+            pratoDiv.innerHTML = `
+                <img src="uploads/${prato.imagem.caminho}" alt="${prato.nome}" width="200">
+                <p>${prato.nome}</p>
+                <p>Preço: R$ ${prato.preco}</p>
+                <p>Descrição: ${prato.descricao}</p>
+            `;
+
+            const avaliacoesDiv = document.createElement("div");
+            avaliacoesDiv.classList.add("avaliacoes");
+            avaliacoesDiv.innerHTML = `
+                <textarea id="comentario-${prato.nome}" placeholder="Escreva um comentário..."></textarea>
+                    <div class="nota">
+                        <button onclick="mostrarOpcoesNota('${prato.nome}')">Escolher Nota</button>
+                        <div id="opcoes-nota-${prato.nome}" class="opcoes-nota" style="display: none;">
+                            <label><input type="radio" name="nota-${prato.nome}" value="1"> 1</label>
+                            <label><input type="radio" name="nota-${prato.nome}" value="2"> 2</label>
+                            <label><input type="radio" name="nota-${prato.nome}" value="3"> 3</label>
+                            <label><input type="radio" name="nota-${prato.nome}" value="4"> 4</label>
+                            <label><input type="radio" name="nota-${prato.nome}" value="5"> 5</label>
+                        </div>
+                    </div>
+                <button onclick="enviarAvaliacao('${prato.nome}')">Enviar</button>
+                <div class="lista-avaliacoes" id="avaliacoes-${prato.nome}"></div>
+            `;
+
+            pratoContainer.appendChild(pratoDiv);
+            pratoContainer.appendChild(avaliacoesDiv);
+            pratosContainer.appendChild(pratoContainer);
+
+            const avaliacoes = await buscarAvaliacoes(prato.nome);
+            const listaAvaliacoesDiv = document.getElementById(`avaliacoes-${prato.nome}`);
+            listaAvaliacoesDiv.innerHTML = '';
+
+            if (avaliacoes.length > 0) {
+                avaliacoes.forEach(avaliacao => {
+                    const avaliacaoDiv = document.createElement("div");
+                    avaliacaoDiv.classList.add("avaliacao");
+                    avaliacaoDiv.innerHTML = `
+                        <strong>${avaliacao.nome_cliente}</strong> (Nota: ${avaliacao.nota})
+                        <p>${avaliacao.comentario}</p>
+                    `;
+
+                    if (avaliacao.nome_cliente === localStorage.getItem('nome_cliente')) {
+                        document.getElementById(`comentario-${prato.nome}`).value = avaliacao.comentario;
+                        document.querySelector(`input[name="nota-${prato.nome}"][value="${avaliacao.nota}"]`).checked = true;
+                    }
+
+                    listaAvaliacoesDiv.appendChild(avaliacaoDiv);
+                });
+            }
+            else {
+                listaAvaliacoesDiv.innerHTML = "<p>Sem avaliações ainda.</p>";
+            }
+        }
+    }
+    function mostrarOpcoesNota(pratoNome) {
+        const opcoesNota = document.getElementById(`opcoes-nota-${pratoNome}`);
+        opcoesNota.style.display = opcoesNota.style.display === 'none' ? 'block' : 'none';
+    }
+
+window.onload = buscarPratos;
+
+</script>
 </html>
