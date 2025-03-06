@@ -27,6 +27,6 @@ CREATE TABLE avaliacoes (
     prato_nome VARCHAR(30) NOT NULL,
     nota INT CHECK (nota >= 1 AND nota <= 5),
     comentario TEXT,
-    CONSTRAINT fk_cliente FOREIGN KEY (nome_cliente) REFERENCES clientes(nome),
+    CONSTRAINT fk_cliente FOREIGN KEY (nome_cliente) REFERENCES usuario(nome),
     CONSTRAINT fk_prato FOREIGN KEY (prato_nome) REFERENCES pratos(nome)
 );
